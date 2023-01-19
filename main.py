@@ -10,7 +10,7 @@ import yaml
 with open("config.yaml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
-
+#building the model
 model = build_model(
     input_shape,
     head_size=cfg["head_size"],
