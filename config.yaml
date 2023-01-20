@@ -9,13 +9,14 @@ base_URL: 'Data/'
 ###########################################################
 # Hyperparameters for fitting a model.
 ###########################################################
-num_epochs: 1
+num_epochs: 5
 validation_split: 0.2 #default 0.2
 batch_size: 8 #default 64
 learning_rate: 1.0e-4 #default 1.0e-4
-loss: 'sparse_categorical_crossentropy'
-metric: 'sparse_categorical_crossentropy'
-
+loss: ['sparse_categorical_crossentropy']
+metric: ['sparse_categorical_crossentropy']
+#How often to save a model in case training is interupted (in batches)
+checkpoint_save_freq: 100
 ###########################################################
 # Hyperparameters for building a model.
 ###########################################################

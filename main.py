@@ -1,7 +1,7 @@
 # Code adapted from https://keras.io/examples/timeseries/timeseries_transformer_classification/
 
 from tensorflow import keras
-from Model import build_model, callbacks
+from Model import build_model, make_or_restore_model, callbacks
 from Data import *
 
 import yaml
@@ -39,8 +39,9 @@ model.fit(
     callbacks=callbacks,
 )
 
-model.evaluate(x_test, y_test, verbose=1)
+results = model.evaluate(x_test, y_test, verbose=1)
 
 location="./Models/"+cfg["model_name"]
 print(location)
+
 model.save(location)
