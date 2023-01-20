@@ -1,7 +1,11 @@
+###########################################################
+# Basic Model config options
+###########################################################
 model_name: 'Gait Transformer'
 training_data: 'gait_train.tsv' #name of the file for the training dataset.
 testing_data: 'gait_test.tsv' #name of the file for the testing dataset.
 base_URL: 'Data/'
+
 ###########################################################
 # Hyperparameters for fitting a model.
 ###########################################################
@@ -9,6 +13,8 @@ num_epochs: 1
 validation_split: 0.2 #default 0.2
 batch_size: 8 #default 64
 learning_rate: 1.0e-4 #default 1.0e-4
+loss: 'sparse_categorical_crossentropy'
+metric: 'sparse_categorical_crossentropy'
 
 ###########################################################
 # Hyperparameters for building a model.

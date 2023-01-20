@@ -23,9 +23,9 @@ model = build_model(
 )
 
 model.compile(
-    loss="sparse_categorical_crossentropy",
+    loss=cfg["loss"],
     optimizer=keras.optimizers.Adam(learning_rate=cfg["learning_rate"]),
-    metrics=["sparse_categorical_crossentropy"],
+    metrics=cfg["metric"],
 )
 
 model.summary()
