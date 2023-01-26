@@ -17,6 +17,15 @@ checkpoint_dir = "./Models/checkpoints/"+cfg["model_name"]
 if not os.path.exists(checkpoint_dir):
     os.makedirs(checkpoint_dir)
 
+"""
+Callback functions to add to the model fitting.
+Includes:
+    Early stopping - If the loss metric doesn't improve within patience=10 epochs, 
+        discontinue training and restore the best model.
+
+    Model Checkpointing - in case training is interupted, save checkpoint 
+        every 'checkpoint_save_freq' batches as long as loss is improved. 
+"""
 callbacks = [
     keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True),
     keras.callbacks.ModelCheckpoint(
@@ -53,10 +62,12 @@ def build_model(
         x = layers.Dense(dim, activation="relu")(x)
         x = layers.Dropout(mlp_dropout)(x)
     outputs = layers.Dense(n_classes, activation="softmax")(x)
-    return keras.Model(inputs, outputs)
+    regression=layers.Dense(1, activation="linear")(x)
+    return keras.Model(inputs, outputs=regression)
 
 """
-Function that checks if there have been any checkpoints made for this model name, and if there have been, load the existing model aand return it.
+Function that checks if there have been any checkpoints made for this model name, 
+and if there have been, load the existing model and return it.
 Otherwise, create a new model, and return that.
 """
 def make_or_restore_model():

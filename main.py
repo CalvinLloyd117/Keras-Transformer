@@ -31,6 +31,7 @@ model.compile(
 model.summary()
 
 model.fit(
+    # train_dataset,
     x_train,
     y_train,
     validation_split=cfg["validation_split"],

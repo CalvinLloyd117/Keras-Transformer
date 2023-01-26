@@ -1,6 +1,7 @@
 import numpy as np
 from readucr import readucr
 import yaml
+import tensorflow as tf
 #Load in configuration yaml for storing parameters.
 with open("config.yaml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
@@ -20,6 +21,9 @@ y_train = y_train[idx]
 
 y_train[y_train == -1] = 0
 y_test[y_test == -1] = 0
+
+# train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
+# test_dataset = tf.data.Dataset.from_tensor_slices((x_test, y_test))
 
 input_shape = x_train.shape[1:]
 
