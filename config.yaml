@@ -9,7 +9,7 @@ base_URL: 'Data/'
 ###########################################################
 # Hyperparameters for fitting a model.
 ###########################################################
-num_epochs: 5
+num_epochs: 50
 validation_split: 0.2 #default 0.2
 batch_size: 8 #default 64
 learning_rate: 1.0e-4 #default 1.0e-4

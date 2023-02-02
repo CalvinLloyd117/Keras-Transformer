@@ -36,11 +36,26 @@ model = keras.models.load_model(location)
 
 # This block produces the messed up heat map for the model prediction.
 #####################################################################################
-# attention = keras.Model(inputs=model.input, 
+# attention_layer = keras.Model(inputs=model.input, 
 #                                  outputs=model.get_layer("multi_head_attention").output)
 
-# attention_scores = attention.predict(x_test)
-# # print(attention_r)
+#https://stackoverflow.com/questions/70573362/tensorflow-how-to-extract-attention-scores-for-graphing
+# idx_word = {v: k for k, v in x_test[0].items()}
+
+# print("x_labels: ",x_labels)
+# print("y_labels: ",y_labels)
+attention_layer=model.layers[2]
+num_vals=1682
+_, attention_scores = attention_layer(x_train[:5], x_test[:5], return_attention_scores=True) # take one sample
+# fig, axs = plt.subplots(ncols=3, gridspec_kw=dict(width_ratios=[5,5,0.2]))
+# sb.heatmap(attention_scores[0, 0, :10, :10], annot=True, cbar=False)
+heatmap = sb.heatmap(attention_scores[0, 1, :num_vals, :num_vals], annot=False, cbar=True,
+    xticklabels=[idx for idx in x_labels[:num_vals]],
+    yticklabels=[idx for idx in x_labels[:num_vals]]
+)
+# fig.colorbar(axs[1].collections[0], cax=axs[2])
+heatmap.figure.savefig((cfg['model_name']+"_attention_heatmap.pdf"))
+plt.show()
 
 # # attention_scores = attention_layer(x_test[:1], y_test[:1],  return_attention_scores=True) # take one sample
 # fig, axs = plt.subplots(ncols=3, gridspec_kw=dict(width_ratios=[5,5,0.2]))
@@ -49,15 +64,21 @@ model = keras.models.load_model(location)
 # fig.colorbar(axs[1].collections[0], cax=axs[2])
 # plt.show()
 #######################################################################################
+# head_num=1
+# inp = tf.expand_dims(x_train[0,:], axis=0)
+
+# emb = model.layers[1](model.layers[0]((inp)))
+# attention=model.layers[2]._query_dense(emb)
 
 #Attempting to correct the plot for weights, not predictions.
 #######################################################################################
-attention = keras.Model(inputs=model.input, 
-                                 outputs=model.get_layer("multi_head_attention").output)
+# attention = keras.Model(inputs=model.input, 
+#                                  outputs=model.get_layer("multi_head_attention").output)
 
 #Returns a series of multi dimensional arrays for the various components of the weights (attention_output, query, key, etc.)
 #Not sure how to access them individually yet.
-attention_scores = attention.weights
+# attention_scores = attention.get_weights()
+
 
 
 
@@ -72,19 +93,20 @@ attention_scores = attention.weights
 # bias = attention_output[1]
 
 #Block for printing a single column heatmap (uninterprettable)
-print(attention_scores[4])
-
-fig, axs = plt.subplots(ncols=1)
-for arr in attention_scores:
-    arr=np.squeeze(arr.numpy())
-    if(arr.shape != (4, 256)):
-        continue
-    print(arr.shape)
-    sb.heatmap(arr)
-    # sb.heatmap(arr, annot=True, yticklabels=False, cbar=False, ax=axs[1])
-    # fig.colorbar(axs[1].collections[0], cax=axs[2])
-    plt.show()
-
+# print("Atttention Scores: ", attention_scores)
+#################################################
+#Small working block for attention?
+# fig, axs = plt.subplots(ncols=1)
+# for arr in attention_scores:
+#     arr=np.squeeze(arr.numpy())
+#     if(arr.shape != (4, 256)):
+#         continue
+#     print(arr.shape)
+#     sb.heatmap(arr)
+#     # sb.heatmap(arr, annot=True, yticklabels=False, cbar=False, ax=axs[1])
+#     # fig.colorbar(axs[1].collections[0], cax=axs[2])
+#     plt.show()
+#####################################################
 # sb.heatmap(attention_scores[5], annot=True, cbar=False, ax=axs[0])
 # sb.heatmap(attention_scores[5], annot=True, yticklabels=False, cbar=False, ax=axs[1])
 # fig.colorbar(axs[1].collections[0], cax=axs[2])
@@ -115,8 +137,8 @@ for arr in attention_scores:
 # print(result)
 
 # This predition uses the new regression layer to predict the Rank for the x_train set monkeys
-# temp = model.predict(x_train)
-# print(temp)
+temp = model.predict(x_test)
+print(temp)
 
 # This predition uses the new regression layer to predict the Rank for the x_test set monkeys
 # temp = model.predict(x_test)
@@ -138,19 +160,19 @@ for arr in attention_scores:
 # inp = tf.expand_dims(x_train[0,:], axis=0)
 # emb = model.layers[1](model.layers[0]((inp)))
 
-# self_attn = model.layers[2].att(model.layers[1](model.layers[0]((x_train[0,:]))))
-# self_attn = model.layers[2]((x_train[0,:]), 1)
-# # compute Q, K, V
-# query = model.layers[2](query=(emb), key=emb, value=emb)
+# self_attn = model.layers[2]
 
-# key = model.layers[2].key(emb)
-# value = model.layers[2].value(emb)
+# # compute Q, K, V
+# query = self_attn._query_dense(emb)
+# key = self_attn._key_dense(emb)
+# value = self_attn._value_dense(emb)
+
 # # separate heads
-# query = self_attn.separate_heads(query, 1) # batch_size = 1
-# key = self_attn.separate_heads(key, 1) # batch_size = 1
-# value = self_attn.separate_heads(value, 1) # batch_size = 1
+# query = self_attn._separate_heads(query, 1) # batch_size = 1
+# key = self_attn._separate_heads(key, 1) # batch_size = 1
+# value = self_attn._separate_heads(value, 1) # batch_size = 1
 # # compute attention scores (QK^T)
-# attention, weights = self_attn.attention(query, key, value)
+# attention, weights = self_attn(query, key, value)
 
 # idx_word = {v: k for k, v in keras.datasets.imdb.get_word_index().items()}
 # plt.figure(figsize=(30, 30))
@@ -160,3 +182,4 @@ for arr in attention_scores:
 #     yticklabels=[idx_word[idx] for idx in inp[0].numpy()]
 # )
 ########################################################################################################
+

@@ -1,5 +1,6 @@
 import numpy as np
 from readucr import readucr
+from generateLabels import generateLabels
 import yaml
 import tensorflow as tf
 #Load in configuration yaml for storing parameters.
@@ -27,4 +28,5 @@ y_test[y_test == -1] = 0
 
 input_shape = x_train.shape[1:]
 
+x_labels, y_labels = generateLabels(root_url + cfg["training_data"])
 n_classes = len(np.unique(y_train))
