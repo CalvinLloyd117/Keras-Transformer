@@ -11,12 +11,8 @@ Arguments:
 def readucr(filename):
     data = np.loadtxt(filename, delimiter=",", skiprows=1)
     y = data[:, 0]
-    x = data[:, 2:]
-    print("Y: ", y)
-    print("X: ", x)
-    print(x.shape)
-    print(y.shape)
-    return x, y
+    x = data[:, 1:]
+    return x, y.astype(int)
 
 # def readucr(filename):
 #     data = np.loadtxt(filename, delimiter="\t")

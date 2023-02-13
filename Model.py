@@ -1,5 +1,5 @@
 from tensorflow import keras
-from keras import layers
+from tensorflow.keras import layers
 from Transformer import transformer_encoder
 
 from Data import *
@@ -27,18 +27,18 @@ Includes:
         every 'checkpoint_save_freq' batches as long as loss is improved. 
 """
 callbacks = [
-    keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True),
+    keras.callbacks.EarlyStopping(patience=10, monitor="loss", restore_best_weights=True, verbose=1),
     keras.callbacks.ModelCheckpoint(
         # Path where to save the model
         # The two parameters below mean that we will overwrite
         # the current checkpoint if and only if
         # the `val_loss` score has improved.
         # The saved model name will include the current epoch.
-        filepath=checkpoint_dir+"/" + cfg["model_name"]+"_{epoch}",
+        filepath=checkpoint_dir+"/" + cfg["model_name"]+"_checkpoint",
         save_best_only=True,  # Only save a model if `val_loss` has improved.
         monitor="loss",
         verbose=1,
-        save_freq=cfg["checkpoint_save_freq"]
+        save_freq=cfg["checkpoint_save_freq"],
     )
 ]
 
@@ -51,6 +51,7 @@ def build_model(
     mlp_units,
     dropout=0,
     mlp_dropout=0,
+    regression=True
 ):
     inputs = keras.Input(shape=input_shape)
     x = inputs
@@ -61,9 +62,13 @@ def build_model(
     for dim in mlp_units:
         x = layers.Dense(dim, activation="relu")(x)
         x = layers.Dropout(mlp_dropout)(x)
-    outputs = layers.Dense(n_classes, activation="softmax")(x)
-    regression=layers.Dense(1, activation="linear")(x)
-    return keras.Model(inputs, outputs=regression)
+    categorical_layer = layers.Dense(n_classes, activation="softmax")(x) #categorical
+    regression_layer=layers.Dense(1)(x) #regression
+    if regression == True:
+        outputs = regression_layer
+    else:
+        outputs = categorical_layer
+    return keras.Model(inputs, outputs)
 
 """
 Function that checks if there have been any checkpoints made for this model name, 

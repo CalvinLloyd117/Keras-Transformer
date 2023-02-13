@@ -1,6 +1,11 @@
-from keras import layers
+from tensorflow.keras import layers
+import yaml
 
-def transformer_encoder(inputs, head_size, num_heads, ff_dim, dropout=0):
+#Load in configuration yaml for storing parameters.
+with open("config.yaml", "r") as ymlfile:
+    cfg = yaml.safe_load(ymlfile)
+
+def transformer_encoder(inputs, head_size, num_heads, ff_dim, dropout=cfg["dropout"]):
     # Normalization and Attention
     x = layers.LayerNormalization(epsilon=1e-6)(inputs)
     x = layers.MultiHeadAttention(

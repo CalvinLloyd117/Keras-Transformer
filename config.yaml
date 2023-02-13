@@ -1,20 +1,26 @@
 ###########################################################
 # Basic Model config options
 ###########################################################
-model_name: 'Gait Transformer'
+model_name: 'Gait Transformer 2'
 training_data: 'gait_train.csv' #name of the file for the training dataset.
 testing_data: 'gait_test.csv' #name of the file for the testing dataset.
 base_URL: 'Data/'
 
+#Type of prediction?
+#Set regression to True if you want the model output to produce a regression.
+#If set to false, model will predict categorical classes. Remember to modify
+#'loss' and 'metric' values accordingly.
+regression: True
 ###########################################################
 # Hyperparameters for fitting a model.
 ###########################################################
-num_epochs: 50
+num_epochs: 150
 validation_split: 0.2 #default 0.2
-batch_size: 8 #default 64
+batch_size: 10 #default 64
 learning_rate: 1.0e-4 #default 1.0e-4
-loss: ['mean_squared_error']
-metric: ['mean_squared_error']
+shuffle: True
+loss: 'mean_squared_error' #default 'sparse_categorical_crossentropy'
+metric: ['sparse_categorical_accuracy'] #default ['sparse_categorical_accuracy']
 #How often to save a model in case training is interupted (in batches)
 checkpoint_save_freq: 100
 ###########################################################

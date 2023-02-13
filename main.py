@@ -20,6 +20,7 @@ model = build_model(
     mlp_units=[cfg["mlp_units"]],
     mlp_dropout=cfg["mlp_dropout"],
     dropout=cfg["dropout"],
+    regression=cfg["regression"]     
 )
 
 model.compile(
@@ -37,6 +38,7 @@ model.fit(
     epochs=cfg["num_epochs"],
     batch_size=cfg["batch_size"],
     callbacks=callbacks,
+    shuffle=cfg["shuffle"]
 )
 
 results = model.evaluate(x_test, y_test, verbose=1)
