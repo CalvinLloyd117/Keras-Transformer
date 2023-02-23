@@ -12,7 +12,7 @@ def readucr(filename):
     data = np.loadtxt(filename, delimiter=",", skiprows=1)
     y = data[:, 0]
     x = data[:, 1:]
-    return x, y.astype(int)
+    return x, y
 
 # def readucr(filename):
 #     data = np.loadtxt(filename, delimiter="\t")

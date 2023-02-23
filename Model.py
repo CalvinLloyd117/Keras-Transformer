@@ -27,7 +27,7 @@ Includes:
         every 'checkpoint_save_freq' batches as long as loss is improved. 
 """
 callbacks = [
-    keras.callbacks.EarlyStopping(patience=10, monitor="loss", restore_best_weights=True, verbose=1),
+    keras.callbacks.EarlyStopping(patience=cfg["early_stopping"], monitor="loss", restore_best_weights=True, verbose=1),
     keras.callbacks.ModelCheckpoint(
         # Path where to save the model
         # The two parameters below mean that we will overwrite
@@ -51,7 +51,8 @@ def build_model(
     mlp_units,
     dropout=0,
     mlp_dropout=0,
-    regression=True
+    regression=True,
+    n_classes=1
 ):
     inputs = keras.Input(shape=input_shape)
     x = inputs
@@ -62,12 +63,11 @@ def build_model(
     for dim in mlp_units:
         x = layers.Dense(dim, activation="relu")(x)
         x = layers.Dropout(mlp_dropout)(x)
-    categorical_layer = layers.Dense(n_classes, activation="softmax")(x) #categorical
-    regression_layer=layers.Dense(1)(x) #regression
+    
     if regression == True:
-        outputs = regression_layer
+        outputs = layers.Dense(1)(x) #regression
     else:
-        outputs = categorical_layer
+        outputs = layers.Dense(n_classes, activation="softmax")(x) #categorical
     return keras.Model(inputs, outputs)
 
 """
@@ -89,7 +89,7 @@ def make_or_restore_model():
             head_size=cfg["head_size"],
             num_heads=cfg["num_heads"],
             ff_dim=cfg["ff_dim"],
-            num_transformer_blocks=cfg["num_layers"],
+            num_transformer_blocks=cfg["num_transformer_layers"],
             mlp_units=[cfg["mlp_units"]],
             mlp_dropout=cfg["mlp_dropout"],
             dropout=cfg["dropout"],

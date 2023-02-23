@@ -1,9 +1,9 @@
 ###########################################################
 # Basic Model config options
 ###########################################################
-model_name: 'Gait Transformer 2'
-training_data: 'gait_train.csv' #name of the file for the training dataset.
-testing_data: 'gait_test.csv' #name of the file for the testing dataset.
+model_name: 'Gait Transformer_batchsize64'
+training_data: 'gait_train_high_attention.csv' #name of the file for the training dataset.
+testing_data: 'gait_test_high_attention.csv' #name of the file for the testing dataset.
 base_URL: 'Data/'
 
 #Type of prediction?
@@ -14,22 +14,24 @@ regression: True
 ###########################################################
 # Hyperparameters for fitting a model.
 ###########################################################
-num_epochs: 150
+num_epochs: 250
 validation_split: 0.2 #default 0.2
-batch_size: 10 #default 64
+batch_size: 64 #default 64
 learning_rate: 1.0e-4 #default 1.0e-4
-shuffle: True
+shuffle: False
 loss: 'mean_squared_error' #default 'sparse_categorical_crossentropy'
-metric: ['sparse_categorical_accuracy'] #default ['sparse_categorical_accuracy']
+metric: ['mean_squared_error'] #default ['sparse_categorical_accuracy']
 #How often to save a model in case training is interupted (in batches)
-checkpoint_save_freq: 100
+checkpoint_save_freq: 846
 ###########################################################
 # Hyperparameters for building a model.
 ###########################################################
-num_layers: 4 #default 4
+num_transformer_layers: 4 #default 4
 head_size: 256 #default 256
 num_heads: 4 #default 4
 ff_dim: 4 #default 4
-mlp_units: 128 #default 128
+mlp_units: 128 #default 128 - The number dense layers in the model
 mlp_dropout: 0.4 #default 0.4
 dropout: 0.25 #default 0.25
+
+early_stopping: 20
