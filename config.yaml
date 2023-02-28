@@ -1,9 +1,9 @@
 ###########################################################
 # Basic Model config options
 ###########################################################
-model_name: 'Gait Transformer_batchsize64'
-training_data: 'gait_train_high_attention.csv' #name of the file for the training dataset.
-testing_data: 'gait_test_high_attention.csv' #name of the file for the testing dataset.
+model_name: 'Tail Transformer'
+training_data: 'tail_train.csv' #name of the file for the training dataset.
+testing_data: 'tail_test.csv' #name of the file for the testing dataset.
 base_URL: 'Data/'
 
 #Type of prediction?
@@ -14,7 +14,7 @@ regression: True
 ###########################################################
 # Hyperparameters for fitting a model.
 ###########################################################
-num_epochs: 250
+num_epochs: 2500
 validation_split: 0.2 #default 0.2
 batch_size: 64 #default 64
 learning_rate: 1.0e-4 #default 1.0e-4

@@ -42,6 +42,27 @@ callbacks = [
     )
 ]
 
+'''
+Function to build a Keras model using the Transformer network architecture found in 
+Attention is All You Need (https://arxiv.org/abs/1706.03762) consisting of:
+    n transformer_encoder blocks
+    layers.GlobalAveragePooling1D
+    n layers.Dense(dim, activation="relu")(x)
+    n layers.Dropout(mlp_dropout)(x)
+    either regression layer, or categorical layer
+
+Arguments:
+    input_shape: The shape of the input data.
+    head_size,
+    num_heads,
+    ff_dim,
+    num_transformer_blocks: Number of tansformer blocks to add to the network.
+    mlp_units,
+    dropout=0,
+    mlp_dropout=0,
+    regression=True,
+    n_classes=1
+'''
 def build_model(
     input_shape,
     head_size,

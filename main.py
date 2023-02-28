@@ -5,7 +5,7 @@ from Model import build_model, make_or_restore_model, callbacks
 from Data import *
 from AttentionScores import *
 
-import yaml
+# import yaml
 
 #Load in configuration yaml for storing parameters.
 # with open("config.yaml", "r") as ymlfile:
@@ -53,3 +53,13 @@ model.save(location)
 createHeatmapForCurrentModel()
 
 saveAttentionScores(0.05)
+
+arby_data = x_train[:95, :]
+arby_predictions = model.predict(arby_data)
+arby_predictions = arby_predictions[(arby_predictions >= 0) & (arby_predictions <= 1)]
+print("Arby Predictions",arby_predictions)
+
+print("Arby Mean: ",np.mean(arby_predictions))
+print("Arby Max: ",np.max(arby_predictions))
+print("Arby Min: ",np.min(arby_predictions))
+print("Arby Median: ",np.median(arby_predictions))

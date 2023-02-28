@@ -1,11 +1,17 @@
 from tensorflow.keras import layers
-import yaml
 from config import loadConfig
 
 #Load in configuration yaml for storing parameters.
 # with open("config.yaml", "r") as ymlfile:
 #     cfg = yaml.safe_load(ymlfile)
 loadConfig()
+
+"""
+Function defining the transformer_encoder layer used in the network.
+For more information on the transformer network, 
+Attention is All You Need (https://arxiv.org/abs/1706.03762)
+
+"""
 def transformer_encoder(inputs, head_size, num_heads, ff_dim, dropout=0):
     # Normalization and Attention
     x = layers.LayerNormalization(epsilon=1e-6)(inputs)

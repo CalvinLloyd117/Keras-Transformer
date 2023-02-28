@@ -3,16 +3,24 @@ import csv
 from config import loadConfig
 from LoadModel import loadConfiguredModel
 
-##################################################################################
-#This predition uses the new regression layer to predict the Rank for the x_test set monkeys
+'''
+Function creates a .cvs file containing the model predictions
+Arguments:
+    data: The data (in the format that the model is expecting)
+    filename: a string indicating what to call the file.
+    verbose (default = False): If set to true, the predictions 
+    will be printed as well as output into a csv.
 
-##################################################################################
-##################################################################################
-#Create a csv and output the rows from predictions 
-##################################################################################
+Returns:
+    A .csv file with predictions. The file can be found in cfg['base_URL']/Predictions/filename
+    The prediction column within the csv will be named cfg['model_name']+"_predictions" with
+    all spaces removed.
+'''
 def outputPredictionsToCsv(data, filename, verbose=False):
-    loadConfig()
+    loadConfig() #Load the config file to use the parameters.
     model=loadConfiguredModel()
+
+    #use the model to predfict on the data
     predictions = model.predict(data, batch_size=cfg['batch_size'])
     if verbose:
         print("Predictions:")
@@ -25,11 +33,14 @@ def outputPredictionsToCsv(data, filename, verbose=False):
             wr.writerow(ln)
 
 
+filename = (cfg['model_name']+"_x_train_predictions.csv")
+outputPredictionsToCsv(x_train, filename, verbose=True)
+
 filename = (cfg['model_name']+"_x_test_predictions.csv")
 outputPredictionsToCsv(x_test, filename, verbose=True)
 
 
-arby_data = x_train[:55, :]
+arby_data = x_train[:95, :]
 filename=(cfg['model_name']+"_arby_predictions.csv")
 outputPredictionsToCsv(arby_data, filename, verbose=True)
 
